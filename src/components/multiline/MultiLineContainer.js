@@ -7,6 +7,8 @@ import * as d3 from "d3";
 function MultiLineContainer() {
     const dispatch = useDispatch();
     const seoulBikeData = useSelector((state) => state.dataSet.data);
+    const brushSource = useSelector((state) => state.dataSet.brushSource);
+    const brushedData = useSelector((state) => state.dataSet.brushedData);
 
     // Preprocess data for multi-line chart
     const preprocessData = (data) => {
@@ -58,6 +60,24 @@ function MultiLineContainer() {
         return { width, height}; // Default size
     };
 
+    const handleBrush = (extent) => {
+        if (extent) {
+            const [x0, x1] = extent;
+    
+            // Filter data based on the hour range
+            const filteredData = visData.filter((d) => d.hour >= x0 && d.hour <= x1);
+    
+            dispatch(
+                handleBrushed({
+                    type: "multiline", // Specify the brush source
+                    brushedData: filteredData,
+                })
+            );
+        } else {
+            dispatch(handleBrushed({ type: "multiline", brushedData: [] }));
+        }
+    };
+
     useEffect(() => {
         const multiLine = new MultiLineD3(divContainerRef.current);
         multiLine.create({ size: getChartSize() });
@@ -85,14 +105,27 @@ function MultiLineContainer() {
             dispatch(handleBrushed(brushedData));
         };
 
+        
+        
+
         const controllerMethods = {
             handleOnHover,
             handleOnClick,
-            handleBrushed: handleBrushedData,
+            handleBrushed: handleBrush,
         };
 
         multiLine.renderMultiLineChart(visData, controllerMethods);
     }, [visData]);
+
+    useEffect(() => {
+        if (brushSource === 'scatterplot') {
+            const multilineD3 = multiLineRef.current;
+    
+            // Update the multiline chart with the brushed data from the scatterplot
+            multilineD3.updateBrushedElements(brushedData);
+        }
+    }, [brushSource, brushedData]);
+    
 
     return (
         <div id="multiline-container" ref={divContainerRef} className="multilineDivContainer">

@@ -58,6 +58,18 @@ class MultiLineD3 {
             .text("Rented Bike Count");
     };
 
+    updateBrushedElements(brushedData) {
+        const brushedHours = new Set(brushedData.map((d) => d.hour));
+    
+        this.matSvg.selectAll(".line-path")
+            .transition()
+            .duration(200)
+            .attr("stroke-opacity", ([season, values]) => 
+                values.some((v) => brushedHours.has(v.hour)) ? 1 : 0.2 // Dim unbrushed lines
+            );
+    }
+    
+
     renderMultiLineChart = function (data, controllerMethods) {
         const groupedData = d3.group(data, (d) => d.season);
 

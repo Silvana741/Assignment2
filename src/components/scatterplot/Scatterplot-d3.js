@@ -74,6 +74,15 @@ class ScatterplotD3 {
             // .attr("fill", (itemData) => this.colorScale(itemData.value));
     }
 
+    updateBrushedElements(brushedData) {
+        this.matSvg.selectAll(".scatter-point")
+            .transition()
+            .duration(200)
+            .attr("fill", (d) => brushedData.includes(d) ? "orange" : "steelblue")
+            .attr("r", (d) => brushedData.includes(d) ? 6 : 4); // Highlight brushed points
+    }
+    
+
     renderScatterplot = function (visData, controllerMethods) {
         // Set up scales based on the data
         const xExtent = d3.extent(visData, (d) => d.x);

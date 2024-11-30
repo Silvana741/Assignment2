@@ -7,12 +7,16 @@ function ScatterplotContainer() {
     const dispatch = useDispatch();
     // Access the data from Redux
     const seoulBikeData = useSelector((state) => state.dataSet.data);
+    const brushSource = useSelector((state) => state.dataSet.brushSource);
+    const brushedData = useSelector((state) => state.dataSet.brushedData);
+
 
     // Map data for the scatterplot
     const visData = Array.isArray(seoulBikeData)
     ? seoulBikeData.map((item) => ({
           x: item.Temperature,
           y: item.RentedBikeCount,
+          hour: item.hour,
           value: item.Visibility,
           id: item.index,
       }))
@@ -23,7 +27,7 @@ function ScatterplotContainer() {
     });
 
     const divContainerRef = useRef(null);
-    const scatterplotD3Ref = useRef(null); // Corrected from visD3Ref to scatterplotD3Ref
+    const scatterplotD3Ref = useRef(null); 
 
     const getCharSize = function () {
         let width;
@@ -34,6 +38,35 @@ function ScatterplotContainer() {
         }
         return { width, height };
     };
+
+    const handleBrush = (selection) => {
+        if (selection && selection.length < 0) {
+            const [[x0, y0], [x1, y1]] = selection; // Get the bounding box of the brush in pixel space
+    
+            // Map the pixel values back to the data domain using scales
+            const tempRange = [scatterplotD3Ref.current.xScale.invert(x0), scatterplotD3Ref.current.xScale.invert(x1)];
+            const bikeRange = [scatterplotD3Ref.current.yScale.invert(y1), scatterplotD3Ref.current.yScale.invert(y0)]; // Note: y is inverted
+    
+            // Filter the data based on the computed ranges
+            const filteredData = visData.filter(
+                (d) =>
+                    d.x >= tempRange[0] &&
+                    d.x <= tempRange[1] &&
+                    d.y >= bikeRange[0] &&
+                    d.y <= bikeRange[1]
+            );
+    
+            dispatch(
+                handleBrushed({
+                    type: 'scatterplot', // Specify the brush source
+                    brushedData: filteredData,
+                })
+            );
+        } else {
+            dispatch(handleBrushed({ type: 'scatterplot', brushedData: [] }));
+        }
+    };
+    
 
     // Component Did Mount
     useEffect(() => {
@@ -61,15 +94,25 @@ function ScatterplotContainer() {
         const handleBrushedData = (brushedData) => {
             dispatch(handleBrushed(brushedData));
         };
+        
         const controllerMethods = {
             handleOnHover,
             handleOnClick,
-            handleBrushed: handleBrushedData,
+            handleBrushed: handleBrush,
         };
 
         scatterplotD3.renderScatterplot(visData, controllerMethods);
     }, [visData]); // Re-renders when visData changes
 
+    useEffect(() => {
+        if (brushSource === 'multiline') {
+            const scatterplotD3 = scatterplotD3Ref.current;
+    
+            // Update the scatterplot with the brushed data from the multiline chart
+            scatterplotD3.updateBrushedElements(brushedData);
+        }
+    }, [brushSource, brushedData]);
+    
     return (
         <div id="scatterplot-container" ref={divContainerRef} className="scatterplotDivContainer">
             {seoulBikeData.length === 0 ? (
