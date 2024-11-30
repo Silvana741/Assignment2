@@ -1,0 +1,36 @@
+.multilineDivContainer {
+    width: 50%;
+    height: 80%;
+    border: 1px solid #ccc;
+    margin: 20px 0;
+    position: relative;
+}
+
+.line-path {
+    fill: none;
+    stroke-width: 2px;
+    opacity: 0.8;
+}
+
+.line-path:hover {
+    stroke-width: 3px;
+    opacity: 1;
+}
+
+.brush .selection {
+    fill: rgba(100, 149, 237, 0.3);
+    stroke: steelblue;
+}
+
+.brush-background {
+    cursor: crosshair; /* Show crosshair cursor for brushing */
+}
+
+.line-path {
+    cursor: pointer; /* Change cursor to pointer on line hover */
+}
+
+.hover-text {
+    font-weight: bold;
+    pointer-events: none; /* Prevent hover text from blocking interactions */
+}

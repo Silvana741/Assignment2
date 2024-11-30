@@ -1,0 +1,10 @@
+.scatterplotDivContainer{
+    height: 100%;
+}
+
+.brush .selection {
+    fill: #2196f3;
+    fill-opacity: 0.3;
+    stroke: #2196f3;
+    stroke-width: 2;
+}

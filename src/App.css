@@ -17,3 +17,26 @@
     float: left;
     width: 50%;
 }
+
+/* Parent container with flexbox */
+#view-container {
+    display: flex; /* Enables flexbox layout */
+    flex-direction: row; /* Horizontal alignment */
+    justify-content: space-between; /* Space between the containers */
+    align-items: flex-start; /* Align items to the top of the row */
+    gap: 20px; /* Adds space between containers */
+    padding: 10px; /* Optional: Add padding around the view */
+}
+
+/* Ensure both containers have a fixed or proportional width */
+.linechartDivContainer,
+.scatterplotDivContainer,
+.HeatmapContainer {
+    flex: 1; /* Allow equal width for both containers */
+    min-width: 0; /* Prevent overflow issues */
+    max-width: 50%; /* Ensure they don't exceed 50% of the row */
+    height: 100%; /* Ensure consistent height */
+    border: 1px solid #ddd; /* Optional: Add a border for visibility */
+    padding: 10px; /* Optional: Add padding inside the containers */
+    box-sizing: border-box; /* Include padding in the width/height calculation */
+}
