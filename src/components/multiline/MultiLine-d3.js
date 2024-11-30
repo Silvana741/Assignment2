@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 
 class MultiLineD3 {
-    margin = { top: 20, right: 20, bottom: 70, left: 50 };
+    margin = { top: 20, right: 20, bottom: 70, left: 60 };
     size;
     height;
     width;
@@ -127,12 +127,13 @@ class MultiLineD3 {
                     const brushedData = data.filter(
                         (d) => d.hour >= x0 && d.hour <= x1
                     );
+                    console.log(brushedData)
 
                     controllerMethods.handleBrushed(brushedData);
                 }
             });
 
-        this.matSvg.append("g").attr("class", "brush").call(brush);
+        this.matSvg.append("g").attr("class", "brush-ml").call(brush);
     };
 
     clear = function () {

@@ -13,6 +13,7 @@ function ScatterplotContainer() {
     ? seoulBikeData.map((item) => ({
           x: item.Temperature,
           y: item.RentedBikeCount,
+          value: item.Visibility,
           id: item.index,
       }))
     : [];

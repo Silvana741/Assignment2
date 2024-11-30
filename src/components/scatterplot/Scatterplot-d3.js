@@ -10,7 +10,7 @@ class ScatterplotD3 {
     // add specific class properties used for the vis render/updates
     xScale = d3.scaleLinear();
     yScale = d3.scaleLinear();
-    colorScale = d3.scaleSequential(d3.interpolateBlues);
+    // colorScale = d3.scaleSequential(d3.interpolateBlues);
 
     constructor(el){
         this.el=el;
@@ -71,7 +71,7 @@ class ScatterplotD3 {
             .attr("cx", (itemData) => this.xScale(itemData.x))
             .attr("cy", (itemData) => this.yScale(itemData.y))
             .attr("r", 5)
-            .attr("fill", (itemData) => this.colorScale(itemData.value));
+            // .attr("fill", (itemData) => this.colorScale(itemData.value));
     }
 
     renderScatterplot = function (visData, controllerMethods) {
@@ -100,6 +100,7 @@ class ScatterplotD3 {
                         .append("g")
                         .attr("class", "itemG")
                         .attr("fill", "steelblue")
+                        .attr("opacity", 0.8)
                         .on("mouseover", (event, itemData) => {
                             controllerMethods.handleOnHover(itemData);
                         })
@@ -147,9 +148,11 @@ class ScatterplotD3 {
                     this.yScale(d.x) >= y0 &&
                     this.yScale(d.x) <= y1 
                 );
+                console.log(brushedData)
                 controllerMethods.handleBrushed(brushedData);
                 }
             });
+
 
             this.matSvg.append("g").attr("class", "brush").call(brush);
     };

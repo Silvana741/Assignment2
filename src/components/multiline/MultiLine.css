@@ -1,6 +1,6 @@
 .multilineDivContainer {
     width: 50%;
-    height: 80%;
+    height: 100%;
     border: 1px solid #ccc;
     margin: 20px 0;
     position: relative;
@@ -17,7 +17,7 @@
     opacity: 1;
 }
 
-.brush .selection {
+.brush-ml .selection {
     fill: rgba(100, 149, 237, 0.3);
     stroke: steelblue;
 }
