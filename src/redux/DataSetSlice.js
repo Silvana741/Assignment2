@@ -18,6 +18,7 @@ export const dataSetSlice = createSlice({
     hoveredItem: null,
     clickedItem: null,
     brushedData: [],
+    brushSource: null,
   },
   reducers: {
       onHover: (state, action) => {
@@ -27,7 +28,9 @@ export const dataSetSlice = createSlice({
         state.clickedItem = action.payload;
       },
       handleBrushed: (state,action) => {
-        state.brushedData = action.payload;
+        const {type, brushedData} = action.payload;
+        state.brushedData = brushedData;
+        state.type=type;
       }
   },
   extraReducers: builder => {
